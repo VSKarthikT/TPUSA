@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.travelportfolio.TPUSA.dto.RegisterRequest;
 import com.travelportfolio.TPUSA.model.User;
 import com.travelportfolio.TPUSA.repository.UserRepository;
 
@@ -37,7 +38,12 @@ public class AuthService {
   }
 
   // Register a new user
-  public ResponseEntity<?> registerUser(String email, String password, String name) {
+  public ResponseEntity<?> registerUser(RegisterRequest request) {
+    String email = request.getEmail();
+    String password = request.getPassword();
+    String name = request.getName();
+    String bio = request.getBio();
+    String profile_pic = request.getProfilePicture();
     if (userRepository.findByEmail(email) != null) {
       throw new IllegalArgumentException("Email already present in DB, Try logging in");
     }
@@ -47,7 +53,14 @@ public class AuthService {
     newUser.setName(name);
     newUser.setRole("ROLE_USER");
     newUser.setCreatedAt(LocalDateTime.now());
+    if (bio != null) {
+      newUser.setBio(bio);
+    }
+    if (profile_pic != null) {
+      newUser.setProfilePicture(profile_pic);
+    }
     userRepository.save(newUser);
+
     return ResponseEntity.ok("new User Saved in the database, Login to continue");
   }
 

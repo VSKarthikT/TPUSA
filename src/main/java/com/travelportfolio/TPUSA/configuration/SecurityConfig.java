@@ -23,6 +23,8 @@ public class SecurityConfig {
   private UserDetailsService userDetailsService;
   @Autowired
   private JWTFilter jwtFilter;
+  @Autowired
+  private CustomAuthenticationEntryPoint CustomAuthenticationEntryPoint;
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,7 +32,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(request -> request
             .requestMatchers("api/auth/login", "api/auth/register")
             .permitAll()
+            .requestMatchers("api/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated())
+        .exceptionHandling(exception -> exception
+            .authenticationEntryPoint(CustomAuthenticationEntryPoint))
         .httpBasic(Customizer.withDefaults())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

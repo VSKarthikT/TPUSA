@@ -1,6 +1,7 @@
 package com.travelportfolio.TPUSA.configuration;
 
 import java.io.IOException;
+import java.security.SignatureException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,27 +35,37 @@ public class JWTFilter extends OncePerRequestFilter {
     String authHead = request.getHeader("Authorization");
     String token = null;
     String username = null;
-
-    if (authHead != null && authHead.startsWith("Bearer ")) {
-      token = authHead.substring(7);
-      username = jwtService.extractUserName(token);
-    }
-    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      // System.out.println("In authentication username is " + username);
-      UserDetails userDetails = applicationContext.getBean(MyUserDetailsService.class).loadUserByUsername(username);
-      // System.out.println("In authentication token is " + token);
-      // System.out.println("In Validate token bool " +
-      // jwtService.validateToken(token, userDetails));
-      if (jwtService.validateToken(token, userDetails)) {
-
-        // If token is valid then we will set the authentication in the context
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-            userDetails, null, userDetails.getAuthorities());
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+    try {
+      if (authHead != null && authHead.startsWith("Bearer ")) {
+        token = authHead.substring(7);
+        username = jwtService.extractUserName(token);
       }
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        // System.out.println("In authentication username is " + username);
+        UserDetails userDetails = applicationContext.getBean(MyUserDetailsService.class).loadUserByUsername(username);
+        // System.out.println("In authentication token is " + token);
+        // System.out.println("In Validate token bool " +
+        // jwtService.validateToken(token, userDetails));
+        if (jwtService.validateToken(token, userDetails)) {
+
+          // If token is valid then we will set the authentication in the context
+          UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+              userDetails, null, userDetails.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        } else {
+          System.out.println("Token is not valid");
+        }
+      }
+      filterChain.doFilter(request, response);
+
+    } catch (Exception e) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType("application/json");
+      response.getWriter().write(
+          "{\"error\": \"Invalid JWT signature or Token is expires Login again to generate token. Please provide a valid token.\"}");
+      response.getWriter().flush();
     }
-    filterChain.doFilter(request, response);
 
   }
 

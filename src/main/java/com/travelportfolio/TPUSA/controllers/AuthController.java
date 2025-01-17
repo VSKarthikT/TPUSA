@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.travelportfolio.TPUSA.dto.RegisterRequest;
 import com.travelportfolio.TPUSA.service.AuthService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -17,9 +19,9 @@ public class AuthController {
   private AuthService authService;
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
     try {
-      return authService.registerUser(request.getEmail(), request.getPassword(), request.getName());
+      return authService.registerUser(request);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(400).body(e.getMessage());
     }

@@ -45,7 +45,9 @@ WRITE SOME THING about project
   - Verifies token integrity and expiration.
   - Extracts user information from the token for authorization.
 - **Secure Filter:**
-  - A custom `JWTFilter` ensures that each request contains a valid token.
+  - A custom `JWTFilter` ensures that each request contains a valid token. -**Token Validation:**
+- Every time we restart application new tokens are required to be generated, Previous tokens becomes Invalidated
+  this can be changed to later for static Secret key.
 
 ---
 
