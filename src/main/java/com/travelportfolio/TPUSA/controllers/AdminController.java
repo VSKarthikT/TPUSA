@@ -9,6 +9,7 @@ import com.travelportfolio.TPUSA.repository.UserRepository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -18,7 +19,8 @@ public class AdminController {
   private UserRepository userRepository;
 
   @GetMapping("/all_users")
-  public List<User> getAllUsers() {
+  public List<User> getAllUsers(Authentication authentication) {
+
     return userRepository.findAll();
   }
 }

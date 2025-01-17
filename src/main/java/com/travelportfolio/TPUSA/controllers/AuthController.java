@@ -26,11 +26,11 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody RegisterRequest request) {
+  public String login(@RequestBody RegisterRequest request) {
     try {
       return authService.loginUser(request.getEmail(), request.getPassword());
     } catch (IllegalArgumentException e) {
-      return ResponseEntity.status(400).body(e.getMessage());
+      return "Login Failed + " + e.getMessage();
     }
   }
 

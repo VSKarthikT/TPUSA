@@ -22,8 +22,10 @@ public class UserController {
   @PostMapping("/updateBio")
   public ResponseEntity<?> updateBio(@RequestBody UpdateBioRequest request, Principal principal) {
     String email = principal.getName();
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      return ResponseEntity.status(400).body("User not found");
+    }
     user.setBio(request.getBio());
     userRepository.save(user);
     return ResponseEntity.ok("Bio Updated Successfully");
