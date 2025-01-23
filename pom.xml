@@ -80,17 +80,17 @@
 		</dependency>
 		<!--DTO validations-->
 		<!--JSON validators dependacy-->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>8.0.0.Final</version>
-        </dependency>
+		<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>8.0.0.Final</version>
+		</dependency>
 
-        <dependency>
-            <groupId>org.glassfish.expressly</groupId>
-            <artifactId>expressly</artifactId>
-            <version>6.0.0-M1</version>
-        </dependency>
+		<dependency>
+				<groupId>org.glassfish.expressly</groupId>
+				<artifactId>expressly</artifactId>
+				<version>6.0.0-M1</version>
+		</dependency>
 		<!--Postgre JDBC driver-->
 		<dependency>
 			<groupId>org.postgresql</groupId>

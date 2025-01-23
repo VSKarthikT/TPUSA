@@ -1,0 +1,23 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-us-west-1.pooler.supabase.com:6543/postgres?prepareThreshold=0
+      - SPRING_DATASOURCE_USERNAME=postgres.xyoksdwpzcyhswjgydzx
+      - SPRING_DATASOURCE_PASSWORD=duxcy9-buwxag-wichaZ
+      - SPRING_DATASOURCE_POOL_MODE=transaction
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "6543:6543"
