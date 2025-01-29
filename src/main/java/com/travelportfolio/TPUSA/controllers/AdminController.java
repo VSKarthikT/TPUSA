@@ -3,10 +3,11 @@ package com.travelportfolio.TPUSA.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.travelportfolio.TPUSA.model.User;
+import com.travelportfolio.TPUSA.dto.UserResponse;
 import com.travelportfolio.TPUSA.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
@@ -19,8 +20,10 @@ public class AdminController {
   private UserRepository userRepository;
 
   @GetMapping("/all_users")
-  public List<User> getAllUsers(Authentication authentication) {
+  public List<UserResponse> getAllUsers(Authentication authentication) {
 
-    return userRepository.findAll();
+    return userRepository.findAll().stream()
+        .map(user -> new UserResponse(user.getEmail(), user.getName(), user.getRole(), user.getBio()))
+        .collect(Collectors.toList());
   }
 }
