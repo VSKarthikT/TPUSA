@@ -37,6 +37,7 @@ public class SecurityConfig {
         .exceptionHandling(exception -> exception
             .authenticationEntryPoint(CustomAuthenticationEntryPoint))
         .httpBasic(Customizer.withDefaults())
+        .cors(Customizer.withDefaults())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
