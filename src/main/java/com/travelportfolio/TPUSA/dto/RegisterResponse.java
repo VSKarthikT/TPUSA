@@ -2,13 +2,13 @@ package com.travelportfolio.TPUSA.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-  private String id;
+public class RegisterResponse {
   private String email;
-  private String name;
-  private String role;
-  private String bio;
+  private String message;
+
 }

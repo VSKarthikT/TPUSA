@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 public class samplecontroller {
-  @GetMapping("/default")
+  @GetMapping("/")
   public String getMethodName() {
-    return "Hello World!";
+    return "Use Login/Register API'S to authenticate USER and get JWT Token";
   }
 }

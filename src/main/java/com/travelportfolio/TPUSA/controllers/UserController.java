@@ -1,34 +1,50 @@
 package com.travelportfolio.TPUSA.controllers;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.travelportfolio.TPUSA.dto.UpdateBioRequest;
+import com.travelportfolio.TPUSA.dto.UpdateProfileRequest;
 import com.travelportfolio.TPUSA.model.User;
 import com.travelportfolio.TPUSA.repository.UserRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/v1/user")
 public class UserController {
   @Autowired
   private UserRepository userRepository;
 
-  @PostMapping("/updateBio")
-  public ResponseEntity<?> updateBio(@RequestBody UpdateBioRequest request, Principal principal) {
+  @PatchMapping("/update")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<String> updateProfile(@Valid @RequestBody UpdateProfileRequest request, Principal principal) {
     String email = principal.getName();
-    User user = userRepository.findByEmail(email);
-    if (user == null) {
-      return ResponseEntity.status(400).body("User not found");
-    }
-    user.setBio(request.getBio());
-    userRepository.save(user);
-    return ResponseEntity.ok("Bio Updated Successfully");
-  }
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
 
+    if (request.getName() != null) {
+      user.setName(request.getName());
+    }
+    if (request.getBio() != null) {
+      user.setBio(request.getBio());
+    }
+    if (request.getProfilePicture() != null) {
+      user.setProfilePicture(request.getProfilePicture());
+    }
+
+    user.setUpdatedAt(LocalDateTime.now());
+    userRepository.save(user);
+
+    return ResponseEntity.ok("Profile updated successfully");
+
+  }
 }

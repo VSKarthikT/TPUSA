@@ -1,7 +1,6 @@
 package com.travelportfolio.TPUSA.configuration;
 
 import java.io.IOException;
-import java.security.SignatureException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
