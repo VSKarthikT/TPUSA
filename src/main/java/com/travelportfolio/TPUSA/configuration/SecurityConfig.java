@@ -30,7 +30,10 @@ public class SecurityConfig {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.csrf(customizer -> customizer.disable())
         .authorizeHttpRequests(request -> request
-            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/", "/api/v1/places/states/**")
+            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/", "/api/v1/places/states/**",
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html")
             .permitAll()
             .requestMatchers("api/admin/**").hasAuthority("ROLE_ADMIN")
             .requestMatchers("/api/v1/user/**").authenticated()

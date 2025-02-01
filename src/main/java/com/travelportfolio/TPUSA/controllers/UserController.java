@@ -1,68 +1,39 @@
 package com.travelportfolio.TPUSA.controllers;
 
-import java.security.Principal;
-import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.travelportfolio.TPUSA.dto.UpdateProfileRequest;
 import com.travelportfolio.TPUSA.dto.UserProfileResponse;
-import com.travelportfolio.TPUSA.model.User;
-import com.travelportfolio.TPUSA.repository.UserRepository;
-
+import com.travelportfolio.TPUSA.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("api/v1/user")
 public class UserController {
-  @Autowired
-  private UserRepository userRepository;
 
-  // GET Profile of user
+  @Autowired
+  private UserService userService;
+
+  // GET User Profile
   @GetMapping("/me")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<UserProfileResponse> getUserProfile(Principal principal) {
     String email = principal.getName();
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("User not found"));
-    UserProfileResponse response = new UserProfileResponse(
-        user.getEmail(),
-        user.getName(),
-        user.getPasswordHash(),
-        user.getBio(),
-        user.getProfilePicture());
-    return ResponseEntity.ok(response);
+    UserProfileResponse response = userService.getUserProfile(email);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
-  // Update Patch
+  // PATCH Update Profile
   @PatchMapping("/update")
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<String> updateProfile(@Valid @RequestBody UpdateProfileRequest request, Principal principal) {
     String email = principal.getName();
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("User not found"));
-
-    if (request.getName() != null) {
-      user.setName(request.getName());
-    }
-    if (request.getBio() != null) {
-      user.setBio(request.getBio());
-    }
-    if (request.getProfilePicture() != null) {
-      user.setProfilePicture(request.getProfilePicture());
-    }
-
-    user.setUpdatedAt(LocalDateTime.now());
-    userRepository.save(user);
-
-    return ResponseEntity.ok("Profile updated successfully");
-
+    String response = userService.updateUserProfile(email, request);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }
