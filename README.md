@@ -1,4 +1,6 @@
 # Travel Portfolio USA (TPUSA)
+#Swagger UI 
+http://localhost:8080/swagger-ui/index.html#/
 
 ### Overview
 
