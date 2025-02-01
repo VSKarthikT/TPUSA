@@ -116,6 +116,12 @@
 							<version>0.12.6</version>
 							<scope>runtime</scope>
 					</dependency>
+					<!-- https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas -->
+					<dependency>
+							<groupId>org.springframework.hateoas</groupId>
+							<artifactId>spring-hateoas</artifactId>
+							<version>3.0.0-M1</version>
+					</dependency>
 		
 		</dependencies>
 

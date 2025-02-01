@@ -2,6 +2,7 @@ package com.travelportfolio.TPUSA.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.travelportfolio.TPUSA.dto.StateResponse;
-import com.travelportfolio.TPUSA.model.States;
+import com.travelportfolio.TPUSA.model.USStates;
 import com.travelportfolio.TPUSA.repository.StatesRepository;
 
 @Service
@@ -17,12 +18,19 @@ public class StateService {
   @Autowired
   private StatesRepository statesRepository;
 
-  public List<States> getAllStates() {
-    return statesRepository.findAll();
+  public ResponseEntity<List<StateResponse>> getAllStates() {
+    List<StateResponse> stateResponses = statesRepository.findAll()
+        .stream()
+        .map(state -> new StateResponse(
+            state.getId(),
+            state.getStateCode(),
+            state.getStateName()))
+        .collect(Collectors.toList());
+    return ResponseEntity.status(HttpStatus.OK).body(stateResponses);
   }
 
   public ResponseEntity<?> getStateById(Long Id) {
-    Optional<States> States = statesRepository.findById(Id);
+    Optional<USStates> States = statesRepository.findById(Id);
     if (States.isPresent()) {
       StateResponse response = new StateResponse(
           States.get().getId(),
@@ -35,7 +43,7 @@ public class StateService {
   }
 
   public ResponseEntity<?> getStateByCode(String StateCode) {
-    Optional<States> States = statesRepository.findByStateCode(StateCode.toUpperCase());
+    Optional<USStates> States = statesRepository.findByStateCode(StateCode.toUpperCase());
     if (States.isPresent()) {
       StateResponse response = new StateResponse(
           States.get().getId(),
@@ -48,7 +56,7 @@ public class StateService {
   }
 
   public ResponseEntity<?> getStateByName(String StateName) {
-    Optional<States> States = statesRepository.findByStateName(StateName);
+    Optional<USStates> States = statesRepository.findByStateName(StateName);
     if (States.isPresent()) {
       StateResponse response = new StateResponse(
           States.get().getId(),

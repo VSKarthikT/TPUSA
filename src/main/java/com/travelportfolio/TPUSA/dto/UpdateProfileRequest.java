@@ -1,6 +1,5 @@
 package com.travelportfolio.TPUSA.dto;
 
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

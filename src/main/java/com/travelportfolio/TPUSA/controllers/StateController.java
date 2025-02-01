@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.travelportfolio.TPUSA.model.States;
+import com.travelportfolio.TPUSA.model.USStates;
 import com.travelportfolio.TPUSA.service.StateService;
 
 @RestController
@@ -20,7 +20,7 @@ public class StateController {
 
   // All states
   @GetMapping("/all")
-  public List<States> getAllStates() {
+  public ResponseEntity<?> getAllStates() {
     return stateService.getAllStates();
   }
 

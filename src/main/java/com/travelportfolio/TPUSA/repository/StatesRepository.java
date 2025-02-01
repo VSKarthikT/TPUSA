@@ -5,11 +5,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.travelportfolio.TPUSA.model.States;
+import com.travelportfolio.TPUSA.model.USStates;
 
 @Repository
-public interface StatesRepository extends JpaRepository<States, Long> {
-  Optional<States> findByStateName(String stateName);
+public interface StatesRepository extends JpaRepository<USStates, Long> {
 
-  Optional<States> findByStateCode(String stateCode);
+  Optional<USStates> findByStateName(String stateName);
+
+  Optional<USStates> findByStateCode(String stateCode);
 }
